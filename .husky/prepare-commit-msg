@@ -1,0 +1,29 @@
+#!/bin/bash
+branches_list() {
+    git branch
+}
+checked_out_branch() {
+    sed -e '/^[^*]/d'
+}
+get_jira_ticket() {
+    grep -e 'SE\+-[0-9]\+' -o
+}
+get_ticket_from_branch_name() {
+    branches_list | checked_out_branch | get_jira_ticket
+}
+get_everything_after_pound() {
+    branches_list | checked_out_branch | get_jira_ticket
+}
+MESSAGE="$(cat $1)"
+EVERYTHING_AFTER_POUND=""$(echo "$MESSAGE" | sed 's/.*#//')""
+echo "$MESSAGE" | sed "s/${EVERYTHING_AFTER_POUND}//g"
+# MESSAGE_WITHOUT_POIND="$(echo "$MESSAGE" | sed \"s/$EVERYTHING_AFTER_POUND//g\")"
+TICKET=`get_ticket_from_branch_name`
+
+echo $EVERYTHING_AFTER_POUND
+# echo $MESSAGE_WITHOUT_POIND
+
+if [ "$TICKET" ]
+then
+echo "$MESSAGE [$TICKET] #$EVERYTHING_AFTER_POUND" > $1
+fi
