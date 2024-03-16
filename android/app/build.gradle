@@ -2,6 +2,19 @@ apply plugin: "com.android.application"
 apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: "com.facebook.react"
 
+// envConfigFiles
+project.ext.envConfigFiles = [
+    productiondebug   : ".env.production",
+    productionrelease : ".env.production",
+    developmentrelease: ".env.development",
+    developmentdebug  : ".env.development",
+    stagingrelease    : ".env.staging",
+    stagingdebug      : ".env.staging"
+]
+
+// react-native-config must after envConfigFiles
+apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
+
 /**
  * This is the configuration block to customize your React Native Android app.
  * By default you don't need to apply any configuration, just uncomment the lines you need.
@@ -93,6 +106,7 @@ android {
     buildTypes {
         debug {
             signingConfig signingConfigs.debug
+            matchingFallbacks = ['debug', 'release']
         }
         release {
             // Caution! In production, you need to generate your own keystore file.
@@ -100,6 +114,28 @@ android {
             signingConfig signingConfigs.debug
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+        }
+    }
+
+    flavorDimensions = ["default"]
+    productFlavors {
+        production {
+            minSdkVersion rootProject.ext.minSdkVersion
+            applicationId "com.ReactNativeTemplate"
+            targetSdkVersion rootProject.ext.targetSdkVersion
+            resValue "string", "build_config_package", "com.ReactNativeTemplate"
+        }
+        staging {
+            minSdkVersion rootProject.ext.minSdkVersion
+            applicationId "com.ReactNativeTemplate.staging"
+            targetSdkVersion rootProject.ext.targetSdkVersion
+            resValue "string", "build_config_package", "com.ReactNativeTemplate"
+        }
+        development {
+            minSdkVersion rootProject.ext.minSdkVersion
+            applicationId "com.ReactNativeTemplate.development"
+            targetSdkVersion rootProject.ext.targetSdkVersion
+            resValue "string", "build_config_package", "com.ReactNativeTemplate"
         }
     }
 }

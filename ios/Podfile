@@ -25,7 +25,7 @@ if linkage != nil
   use_frameworks! :linkage => linkage.to_sym
 end
 
-target 'ReactNativeTemplate' do
+abstract_target 'ReactNativeTemplateCommonPods' do
   config = use_native_modules!
 
   use_react_native!(
@@ -39,6 +39,15 @@ target 'ReactNativeTemplate' do
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
 
+  target 'ReactNativeTemplate-Dev' do
+  end
+
+  target 'ReactNativeTemplate-Staging' do
+  end
+
+  target 'ReactNativeTemplate' do
+  end
+
   target 'ReactNativeTemplateTests' do
     inherit! :complete
     # Pods for testing
@@ -51,5 +60,15 @@ target 'ReactNativeTemplate' do
       config[:reactNativePath],
       :mac_catalyst_enabled => false
     )
+    # ccache
+    installer.pods_project.targets.each do |target|
+      target.build_configurations.each do |config|
+        # Using the un-qualified names means you can swap in different implementations, for example ccache
+        config.build_settings["CC"] = "clang"
+        config.build_settings["LD"] = "clang"
+        config.build_settings["CXX"] = "clang++"
+        config.build_settings["LDPLUSPLUS"] = "clang++"
+      end
+    end
   end
 end
