@@ -1,7 +1,18 @@
-import { AuthSlice, StateSlice } from '~store/types';
+import { AuthSlice, AuthState, Credentials, StateSlice } from '~store/types';
+import { resetAllSlices, sliceResetFns } from '~store/utils';
 
-export const createAuthSlice: StateSlice<AuthSlice> = (set, get) => ({
+const initialState: AuthState = {
   isLoggedIn: false,
-  login: () => set(() => ({ isLoggedIn: true })),
-  logout: () => set(() => ({ isLoggedIn: false })),
-});
+  credentials: null,
+};
+
+export const createAuthSlice: StateSlice<AuthSlice> = (set, get) => {
+  sliceResetFns.add(() => set(() => initialState));
+  return {
+    ...initialState,
+    login: () => set(() => ({ isLoggedIn: true })),
+    logout: () => resetAllSlices(),
+    setCredentials: (credentials: Credentials) =>
+      set(() => ({ credentials }), true),
+  };
+};

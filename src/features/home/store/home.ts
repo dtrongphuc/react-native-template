@@ -1,5 +1,13 @@
-import { HomeSlice, StateSlice } from '~store/types';
+import { HomeSlice, HomeState, StateSlice } from '~store/types';
+import { sliceResetFns } from '~store/utils';
 
-export const createHomeSlice: StateSlice<HomeSlice> = (set, get) => ({
+const initialState: HomeState = {
   promotionBanner: false,
-});
+};
+
+export const createHomeSlice: StateSlice<HomeSlice> = (set, get) => {
+  sliceResetFns.add(() => set(() => initialState));
+  return {
+    ...initialState,
+  };
+};

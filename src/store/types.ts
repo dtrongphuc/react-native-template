@@ -2,18 +2,39 @@ import { StateCreator } from 'zustand';
 import 'zustand/middleware';
 import 'zustand/middleware/immer';
 
-// Slice definitions
-export interface AuthSlice {
-  isLoggedIn: boolean;
-  login: () => void;
-  logout: () => void;
+export interface Credentials {
+  accessToken?: string | null;
+  refreshToken?: string | null;
 }
 
-export interface HomeSlice {
+export interface BaseSate {}
+
+export interface BaseActions {}
+
+// Slice definitions
+// Auth
+export interface AuthState extends BaseSate {
+  isLoggedIn: boolean;
+  credentials?: Credentials | null;
+}
+
+export interface AuthActions extends BaseActions {
+  login: () => void;
+  logout: () => void;
+  setCredentials: (credentials: Credentials) => void;
+}
+
+// Home
+export interface HomeState extends BaseSate {
   promotionBanner: boolean;
 }
 
+export interface HomeActions extends BaseActions {}
+
 // ------
+export type AuthSlice = AuthState & AuthActions;
+export type HomeSlice = HomeState & HomeActions;
+
 export interface CombinedState {
   auth: AuthSlice;
   home: HomeSlice;

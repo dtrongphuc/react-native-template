@@ -4,6 +4,7 @@ import { immer } from 'zustand/middleware/immer';
 import { createAuthSlice } from '~features/auth';
 import { createHomeSlice } from '~features/home';
 import { CombinedState } from './types';
+import { createSelectors } from './utils';
 
 const middlewares = (f: StateCreator<CombinedState>) =>
   immer(
@@ -21,5 +22,7 @@ const useBoundStore = create<CombinedState>()(
     home: createHomeSlice(...a),
   })),
 );
+
+export const storeSelectors = createSelectors(useBoundStore);
 
 export default useBoundStore;
