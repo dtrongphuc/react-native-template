@@ -10,5 +10,6 @@
     "source.fixAll.eslint": "explicit"
   },
   "editor.formatOnSave": true,
-  "prettier.useEditorConfig": false
+  "prettier.useEditorConfig": false,
+  "cSpell.words": ["Immer"]
 }
